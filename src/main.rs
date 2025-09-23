@@ -44,6 +44,20 @@ fn printroll(result:i32) {
 
 //This function will be the help text. I'm not going to write anything until I get done.
 fn help() {
-    println!("This is a placeholder for the help text.");
+    println!("diceroller v0.1");
+    println!("");
+    println!("This program is a command line dice roller. To execute, type:");
+    println!("\tdiceroller NdS");
+    println!("\nWhere:\n");
+    println!("\tN is the number of times to roll the die");
+    println!("\tS is the number of sides on the die");
+    println!("");
+    println!("For instance:");
+    println!("");
+    println!("\tdicecroller 2d20");
+    println!("");
+    println!("Will roll a 20-sided die 2 times.");
+    println!("");
+    println!("Created by Charles Barilleaux (charles@mrguilt.com), September 2025");
     process::exit(0);   
 }
