@@ -13,6 +13,12 @@ fn main() {
         help();
     }
 
+ // This will iterate among the arguments. It will either add the roll to an array (lowering case), or
+ // print the help or version message.   
+ //   for arg in &args {
+ //       print!("{arg}, ");
+ //   }
+
     let commandline=&args[1].to_lowercase();
     if commandline == "--help" {
         help();
