@@ -32,5 +32,5 @@ Other options:
 	--help`		This help information
 	--version` 	Version information
 	--silent	Only prints results--no headers, roll count, etc.
-	--csv		Creates an output to redirecte to a CSV file (Excel import)
+	--csv		Creates an output to redirect to a CSV file (Excel import)
 ```
