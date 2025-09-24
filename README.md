@@ -28,5 +28,8 @@ will roll a 20-sided die 2 times, and a 6-sided die once.
 
 Other options:
 
-	`--help`		This help information<br>
-	`--version` 	Version information
+```
+	--help`		This help information
+	--version` 	Version information
+	--silent	Only prints results--no headers, roll count, etc.
+```

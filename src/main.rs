@@ -2,13 +2,14 @@ use std::env; //Standard library. To get arguments.
 use std::process;
 use rand::Rng; // Import the Rng trait
 
-const version:&str="1.0";   //Version number.
+const version:&str="1.2";   //Version number.
 
 fn main() {
     let mut rng = rand::thread_rng(); // Get a thread-local random number generator
 
     let args: Vec<String> = env::args().collect();  //Retrieve arguments
-    let num_args = args.len();
+    let mut num_args = args.len();
+    let mut mode=2; //default mode. Prints verbose.
 
     if num_args < 2 {   //There has to be at least one argument. This stops the flow and prints the help info.
         println!("\nERROR! Insufficient arguments!\n");
@@ -26,30 +27,58 @@ fn main() {
             help();
         } else if commandline=="--version" { //show the version, and break out.
             showversion();
-        }else {
+        } else if commandline=="--silent" {
+            mode=0;
+            num_args=num_args-1;
+        } else {
             let mut rolls:Vec<&str>=commandline.split('d').collect(); //split the command line
             howmanyrolls.push(rolls[0].parse().unwrap()); //Store the number of rolls
             howmanysides.push(rolls[1].parse().unwrap()); //Store the number of sides
         }
 
     }
-
     for group in (1..num_args) {    //go through each requested set of rolls
         let mut rolltotal=0;    //store the roll total
-        println!("Rolling {}",&args[group]);      
+        rollheader(&args[group],mode);
         for roll in (0..(howmanyrolls[group-1])) {
-            print!("\tRoll #{}: ",(roll+1));
             let result=rng.gen_range(1..(howmanysides[group-1]+1)); //Pick the random number
-            printroll(result);
+            printroll(result,((roll+1)).into(),mode);
             rolltotal=rolltotal+result; //add to the total
         }
-        println!("Total for {}: {rolltotal}\n",&args[group]); //Show the sum of all rolls.
+  //      if mode!=0 {
+  //          println!("Total for {}: {rolltotal}\n",&args[group]); //Show the sum of all rolls.
+  //      } else {
+  //          println!("");
+  //      }
+        rollsummary(&args[group],rolltotal,mode);
     }
 }
 
-//This just prints the results. I may get fancy at a later date. 
-fn printroll(result:i32) { 
-    println!("{result}");
+//Prints the results, based on mode.
+fn printroll(result:i32,rollno:i32,mode:i8) { 
+    if mode==0 {
+        println!("{result}"); //Mode 0: Just prints the rolls, line break between arguments. Allows a 1dS to feed into other things.
+    } else if mode==2 {
+        println!("\tRoll #{rollno}: {result}");
+    } else {
+        println!("INVALID OUTPUT MODE!"); //Fails if a mode number not defined is used.
+        process::exit(0);
+    }
+}
+
+//Prints the results header. Mode sensitive.
+fn rollheader(description:&str, mode:i8) { 
+    if mode!=0 {
+        println!("Rolling {}",description);      
+    }
+}
+
+fn rollsummary(description:&str,total:i32,mode:i8) {
+        if mode!=0 {
+            println!("Total for {description}: {total}\n");
+        } else {
+            println!("");
+        }
 }
 
 //This function will be the help text. I'm not going to write anything until I get done.
@@ -77,6 +106,7 @@ fn help() {
     println!("Other options:");
     println!("\t--help\t\tThis help information");
     println!("\t--version\tVersion information");
+    println!("\t--silent\tOnly prints results--no headers, roll count, etc.");
     println!("");
     println!("Created by Charles Barilleaux (charles@mrguilt.com), September 2025");
     process::exit(0);
