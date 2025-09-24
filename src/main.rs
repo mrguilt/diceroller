@@ -2,18 +2,19 @@ use std::env; //Standard library. To get arguments.
 use std::process;
 use rand::Rng; // Import the Rng trait
 
-const version:&str="1.2.1";   //Version number.
+const version:&str="1.2.2";   //Version number.
 
 fn main() {
     let mut rng = rand::thread_rng(); // Get a thread-local random number generator
 
-    let args: Vec<String> = env::args().collect();  //Retrieve arguments
+    let mut args: Vec<String> = env::args().collect();  //Retrieve arguments
     let mut num_args = args.len();
     let mut mode=2; //default mode. Prints verbose.
 
-    if num_args < 2 {   //There has to be at least one argument. This stops the flow and prints the help info.
-        println!("\nERROR! Insufficient arguments!\n");
-        help();
+    if num_args < 2 {   //No arguments? Roll a verbose D20
+        print!("No arguments! Accpeting a default. ");
+        args.push("1d20".to_string());
+        num_args=num_args+1; //Otherwise, the loops below would break. This is a hack I'll fix later.
     }
 
     let mut howmanyrolls: Vec<i8>=Vec::new();   //Vector to store how many times to roll a given die.
@@ -82,7 +83,7 @@ fn rollsummary(description:&str,total:i32,mode:i8) {
         }
 }
 
-//This function will be the help text. I'm not going to write anything until I get done.
+//This function will print the help text. 
 fn help() {
     println!("diceroller v{version}");
     println!("");
