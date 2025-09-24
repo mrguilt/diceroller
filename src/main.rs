@@ -2,7 +2,7 @@ use std::env; //Standard library. To get arguments.
 use std::process;
 use rand::Rng; // Import the Rng trait
 
-const VERSION:&str="1.3";   //VERSION number.
+const VERSION:&str="1.3.1";   //VERSION number.
 
 fn main() {
     let mut rng = rand::thread_rng(); // Get a thread-local random number generator
@@ -82,7 +82,7 @@ fn printroll(result:i32,rollno:i32,mode:i8) {
 fn rollheader(description:&str, mode:i8) { 
     if mode==2 {
         println!("Rolling {}",description);      
-    } else if mode==3 {     //CSV mode
+    } else if mode==3 {     //CSV mode. First column would be what you requested
         print!("{}",description);
     }
 }
@@ -90,9 +90,7 @@ fn rollheader(description:&str, mode:i8) {
 fn rollsummary(description:&str,total:i32,mode:i8) {
         if mode==2 {
             println!("Total for {description}: {total}\n");
-        } else if mode==3 { //CSV mode
-            println!("");
-        } else {
+        } else {            //Just a line break.
             println!("");
         }
 }
@@ -124,6 +122,8 @@ fn help() {
     println!("\t--version\tVersion information");
     println!("\t--silent\tOnly prints results--no headers, roll count, etc.");
     println!("\t--csv\t\tCreates an output to redirect to a CSV file (Excel import)");
+
+    println!("");
     process::exit(0);
 }
 
