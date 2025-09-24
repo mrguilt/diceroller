@@ -2,6 +2,8 @@ use std::env; //Standard library. To get arguments.
 use std::process;
 use rand::Rng; // Import the Rng trait
 
+const version:&str="0.1.1";
+
 fn main() {
     let mut rng = rand::thread_rng(); // Get a thread-local random number generator
 
@@ -13,30 +15,38 @@ fn main() {
         help();
     }
 
- // This will iterate among the arguments. It will either add the roll to an array (lowering case), or
- // print the help or version message.   
- //   for arg in &args {
- //       print!("{arg}, ");
- //   }
+    let mut howmanyrolls: Vec<i8>=Vec::new();
+    let mut howmanysides: Vec<i32>=Vec::new();
+    let mut commandline:String;
 
-    let commandline=&args[1].to_lowercase();
-    if commandline == "--help" {
-        help();
-    }
-    let mut rolls: Vec<&str>=commandline.split('d').collect();
-    let mut rollcount:i32=rolls[0].parse().unwrap();
-    let mut sides:i32=rolls[1].parse().unwrap();
-    println!("Rolling a {sides}-sided die {rollcount} times:");
-    let mut rolltotal=0;
+    //create two lists: how many rolls, and how many sides associated with the roll.
+    for item in (1..num_args) {
+        let commandline=&args[item].to_lowercase();
+        if commandline=="--help" {  //if you ask for help, break out of it.
+            help();
+        } else {
+            let mut rolls:Vec<&str>=commandline.split('d').collect(); //split the command line
+            howmanyrolls.push(rolls[0].parse().unwrap()); //number of rolls
+            howmanysides.push(rolls[1].parse().unwrap()); //number of sides
+        }
 
-    for i in (1..(rollcount+1)) {
-        print!("\tRoll #{i}: ");
-        let result=rng.gen_range(1..(sides+1));
-        printroll(result);
-        rolltotal=rolltotal+result;
     }
-    println!("Total for {commandline}: {rolltotal}");
+
+    println!("Confirming this worked");
+    for group in (1..num_args) {
+        let mut rolltotal=0;
+        println!("Rolling {}",&args[group]);      
+        println!("\tRoll Count: {}",&howmanyrolls[group-1]);
+        for roll in (0..(howmanyrolls[group-1])) {
+            print!("\tRoll #{}: ",(roll+1));
+            let result=rng.gen_range(1..(howmanysides[group-1]+1));
+            printroll(result);
+            rolltotal=rolltotal+result;
+        }
+        println!("Total for {}: {rolltotal}\n",&args[group]);
+    }
 }
+
 
 fn printroll(result:i32) {
     println!("{result}");
@@ -44,7 +54,7 @@ fn printroll(result:i32) {
 
 //This function will be the help text. I'm not going to write anything until I get done.
 fn help() {
-    println!("diceroller v0.1");
+    println!("diceroller v{version}");
     println!("");
     println!("This program is a command line dice roller. To execute, type:");
     println!("\tdiceroller NdS");
@@ -59,5 +69,4 @@ fn help() {
     println!("Will roll a 20-sided die 2 times.");
     println!("");
     println!("Created by Charles Barilleaux (charles@mrguilt.com), September 2025");
-    process::exit(0);   
 }
