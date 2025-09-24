@@ -2,7 +2,7 @@ use std::env; //Standard library. To get arguments.
 use std::process;
 use rand::Rng; // Import the Rng trait
 
-const version:&str="0.1.1";
+const version:&str="0.3";
 
 fn main() {
     let mut rng = rand::thread_rng(); // Get a thread-local random number generator
@@ -24,7 +24,9 @@ fn main() {
         let commandline=&args[item].to_lowercase();
         if commandline=="--help" {  //if you ask for help, break out of it.
             help();
-        } else {
+        } else if commandline=="--version" { //show the version
+            showversion();
+        }else {
             let mut rolls:Vec<&str>=commandline.split('d').collect(); //split the command line
             howmanyrolls.push(rolls[0].parse().unwrap()); //number of rolls
             howmanysides.push(rolls[1].parse().unwrap()); //number of sides
@@ -69,4 +71,12 @@ fn help() {
     println!("Will roll a 20-sided die 2 times.");
     println!("");
     println!("Created by Charles Barilleaux (charles@mrguilt.com), September 2025");
+    process::exit(0);
+}
+
+fn showversion() {
+    println!("\ndiceroller v{version}");
+    println!("");
+    println!("Created by Charles Barilleaux (charles@mrguilt.com), September 2025");
+    process::exit(0);
 }
