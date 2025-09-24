@@ -2,7 +2,7 @@ use std::env; //Standard library. To get arguments.
 use std::process;
 use rand::Rng; // Import the Rng trait
 
-const version:&str="1.2";   //Version number.
+const version:&str="1.2.1";   //Version number.
 
 fn main() {
     let mut rng = rand::thread_rng(); // Get a thread-local random number generator
@@ -29,7 +29,8 @@ fn main() {
             showversion();
         } else if commandline=="--silent" {
             mode=0;
-            num_args=num_args-1;
+            num_args=num_args-1; //Otherwise, the loops below would break. This is a hack I'll fix later.
+                                 //(Temporary and permanent are synonyms.)
         } else {
             let mut rolls:Vec<&str>=commandline.split('d').collect(); //split the command line
             howmanyrolls.push(rolls[0].parse().unwrap()); //Store the number of rolls
@@ -107,8 +108,6 @@ fn help() {
     println!("\t--help\t\tThis help information");
     println!("\t--version\tVersion information");
     println!("\t--silent\tOnly prints results--no headers, roll count, etc.");
-    println!("");
-    println!("Created by Charles Barilleaux (charles@mrguilt.com), September 2025");
     process::exit(0);
 }
 
