@@ -2,7 +2,7 @@ use std::env; //Standard library. To get arguments.
 use std::process;
 use rand::Rng; // Import the Rng trait
 
-const version:&str="1.2.2";   //Version number.
+const VERSION:&str="1.2.2";   //VERSION number.
 
 fn main() {
     let mut rng = rand::thread_rng(); // Get a thread-local random number generator
@@ -17,11 +17,13 @@ fn main() {
         num_args=num_args+1; //Otherwise, the loops below would break. This is a hack I'll fix later.
     }
 
+    //create two lists: how many rolls, and how many sides associated with the roll.
     let mut howmanyrolls: Vec<i8>=Vec::new();   //Vector to store how many times to roll a given die.
     let mut howmanysides: Vec<i32>=Vec::new();  //Vector to store how many sides are on a given die.
+
     let mut commandline:String;
 
-    //create two lists: how many rolls, and how many sides associated with the roll.
+    //Parse the command line
     for item in (1..num_args) {
         let commandline=&args[item].to_lowercase(); //Smash case
         if commandline=="--help" {  //if you ask for help, show the help text and break out.
@@ -85,7 +87,7 @@ fn rollsummary(description:&str,total:i32,mode:i8) {
 
 //This function will print the help text. 
 fn help() {
-    println!("diceroller v{version}");
+    println!("diceroller v{VERSION}");
     println!("");
     println!("This program is a command line dice roller. To execute, type:");
     println!("\tdiceroller CdS [CdS...]");
@@ -114,7 +116,7 @@ fn help() {
 
 //Print version number, and, because of my ego, who wrote it.
 fn showversion() {
-    println!("\ndiceroller v{version}");
+    println!("\ndiceroller v{VERSION}");
     println!("");
     println!("Created by Charles Barilleaux (charles@mrguilt.com), September 2025");
     process::exit(0);
