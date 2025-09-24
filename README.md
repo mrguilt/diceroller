@@ -14,4 +14,18 @@ Where:
     `C` Number of times to roll the dice
     `S` Number of sides on the dice
 
-So `diceroller 2d6` will roll a 6-side die two times (so, two results between 1 and 6, or a total between 2 and 12).
+For instance:
+
+	`dicecroller 2d20`
+
+will roll a 20-sided die 2 times.
+
+You can roll multiple dice at once. Typing
+
+	`diceroller 2d20 1d6`
+
+will roll a 20-sided die 2 times, and a 6-sided die once.
+
+Other options:
+	`--help`		This help information
+	`--version` 	Version information
