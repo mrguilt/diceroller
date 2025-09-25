@@ -2,7 +2,7 @@ use std::env; //Standard library. To get arguments.
 use std::process;
 use rand::Rng; // Import the Rng trait
 
-const VERSION:&str="1.5";   //VERSION number.
+const VERSION:&str="1.5.1";   //VERSION number.
 
 fn main() {
     let mut rng = rand::thread_rng(); // Get a thread-local random number generator
@@ -54,6 +54,15 @@ fn main() {
             howmanysides.push(rolls[1].parse().unwrap()); //Store the number of sides
         }
 
+    }
+
+    //The easy error handling: if only a format was specified.
+    if howmanyrolls.len()<1 {
+        println!("No dice specified. Using default.");
+        howmanyrolls.push(1);
+        howmanysides.push(20);
+        num_args=num_args+1; //that same damn hack. Sure I'll fix it later.
+        args[1]="1d20".to_string(); //Said what the default is (for CSV mode)
     }
 
     //mode=4; //set mode for testing
@@ -203,11 +212,9 @@ fn resultrow(result:i32,width:i8) {
 }
 
 fn printdice(result:i32) {
-    let mut width:i8=7; //I was going to vary the dice size by the size of the result.
-                        //but I couldn't make a 5x5 die look right. 
-    //if result>=1000 {
-    //    width=7;
-    //} 
+    let mut width:i8=7; //Width and height of the dice. I was going to vary 
+                        //the dice size by the size of the result. but I couldn't 
+                        //make a 5x5 die look right. 
     caprow(width);
     for i in (0..(width/4)) {
         blankrow(width);
