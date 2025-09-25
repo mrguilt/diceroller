@@ -2,7 +2,7 @@ use std::env; //Standard library. To get arguments.
 use std::process;
 use rand::Rng; // Import the Rng trait
 
-const VERSION:&str="1.3.1";   //VERSION number.
+const VERSION:&str="1.5";   //VERSION number.
 
 fn main() {
     let mut rng = rand::thread_rng(); // Get a thread-local random number generator
@@ -15,6 +15,7 @@ fn main() {
         //0     No headers, roll count, etc. Just results, broken by argument
         //2     DEFAULT. Shows what you're rolling, roll count, and a summary
         //3     CSV
+        //4     Pretty
 
     if num_args < 2 {   //No arguments? Roll a verbose D20
         print!("No arguments! Accpeting a default. ");
@@ -43,6 +44,10 @@ fn main() {
             mode=3;
             num_args=num_args-1; //Otherwise, the loops below would break. This is a hack I'll fix later.
                                  //(Temporary and permanent are synonyms.)       
+        } else if commandline=="--pretty" {
+            mode=4;
+            num_args=num_args-1; //Otherwise, the loops below would break. This is a hack I'll fix later.
+                                 //(Temporary and permanent are synonyms.)       
         } else {
             let mut rolls:Vec<&str>=commandline.split('d').collect(); //split the command line
             howmanyrolls.push(rolls[0].parse().unwrap()); //Store the number of rolls
@@ -51,7 +56,7 @@ fn main() {
 
     }
 
-    //mode=3; //set mode for testing
+    //mode=4; //set mode for testing
     for group in (1..num_args) {    //go through each requested set of rolls
         let mut rolltotal=0;    //store the roll total
         rollheader(&args[group],mode);
@@ -72,6 +77,8 @@ fn printroll(result:i32,rollno:i32,mode:i8) {
         println!("\tRoll #{rollno}: {result}");
     } else if mode==3 { //CSV mode
         print!(",{}",result);
+    } else if mode==4 { //Pretty mode
+        printdice(result);
     } else {
         println!("INVALID OUTPUT MODE!"); //Fails if a mode number not defined is used.
         process::exit(0);
@@ -122,6 +129,7 @@ fn help() {
     println!("\t--version\tVersion information");
     println!("\t--silent\tOnly prints results--no headers, roll count, etc.");
     println!("\t--csv\t\tCreates an output to redirect to a CSV file (Excel import)");
+    println!("\t--pretty\tASCII art dice");
 
     println!("");
     process::exit(0);
@@ -133,4 +141,80 @@ fn showversion() {
     println!("");
     println!("Created by Charles Barilleaux (charles@mrguilt.com), September 2025");
     process::exit(0);
+}
+
+//////////////////////////////////////
+// Pretty Dice
+// All of this is to generate "pretty" looking ASCII-art dice. It's broken into five functions.
+
+//Utility function. Will print the same character so-many times without a line break.
+fn printrepeat(what:char,count:i8) {
+    for i in (0..count) {
+        print!("{what}");
+    }
+}
+
+//Each of the next four functions prints part of the dice. They are called in a sequence by
+//printdice() to put it all together.
+//  _____  
+// /     \ caprow()
+// |     | blankrow()
+// |  x  | resultsrow()
+// |     | blankrow()
+// \_____/ bottomrow()
+
+fn caprow(width:i8) {
+    print!(" ");
+    printrepeat('_',width);
+    println!("");
+    print!("/");
+    printrepeat(' ',width);
+    println!("\\");
+}
+
+fn bottomrow(width:i8) {
+//    print!(" ");
+//    printrepeat('_',width);
+//    println!("");
+    print!("\\");
+    printrepeat('_',width);
+    println!("/");
+}
+
+fn blankrow(width:i8) {
+    print!("|");
+    printrepeat(' ',width);
+    println!("|");    
+}
+
+//This prints the row in the middle of the dice. A bit of math is required to (roughly) center it. 
+fn resultrow(result:i32,width:i8) {
+    let resultsize:i8=result.to_string().len().try_into().unwrap();
+    let backpadding:i8=(width-resultsize)/2; //how much space to put behind the result
+    let mut frontpadding=backpadding;
+    if (resultsize%2) == 0 {
+        frontpadding=frontpadding+1;
+    } 
+    print!("|");
+    printrepeat(' ',frontpadding);
+    print!("{result}");
+    printrepeat(' ',backpadding);
+    println!("|");
+}
+
+fn printdice(result:i32) {
+    let mut width:i8=7; //I was going to vary the dice size by the size of the result.
+                        //but I couldn't make a 5x5 die look right. 
+    //if result>=1000 {
+    //    width=7;
+    //} 
+    caprow(width);
+    for i in (0..(width/4)) {
+        blankrow(width);
+    }
+    resultrow(result,width);
+    for i in (0..(width/4)) {
+        blankrow(width);
+    }
+    bottomrow(width);
 }

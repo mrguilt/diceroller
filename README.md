@@ -29,8 +29,9 @@ will roll a 20-sided die 2 times, and a 6-sided die once.
 Other options:
 
 ```
-	--help`		This help information
-	--version` 	Version information
+	--help		This help information
+	--version 	Version information
 	--silent	Only prints results--no headers, roll count, etc.
 	--csv		Creates an output to redirect to a CSV file (Excel import)
+	--pretty	ASCII art dice
 ```
