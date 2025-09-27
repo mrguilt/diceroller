@@ -2,23 +2,23 @@ use std::env; //Standard library. To get arguments.
 use std::process;
 use rand::Rng; // Import the Rng trait
 
-const VERSION:&str="1.5.1";   //VERSION number.
+const VERSION:&str="1.5.2";   //VERSION number.
 
 fn main() {
     let mut rng = rand::thread_rng(); // Get a thread-local random number generator
 
     let mut args: Vec<String> = env::args().collect();  //Retrieve arguments
     let mut num_args = args.len();
-    let mut mode=2; //default mode. Prints verbose.
-
+    
     //Modes!
         //0     No headers, roll count, etc. Just results, broken by argument
-        //2     DEFAULT. Shows what you're rolling, roll count, and a summary
-        //3     CSV
-        //4     Pretty
+        //2     DEFAULT. "Verbose." Shows what you're rolling, roll count, and a summary
+        //3     CSV output. Export to Excel or whatever.
+        //4     Pretty--ASCII art dice.    
+    let mut mode=2; //default mode. Prints verbose.
 
     if num_args < 2 {   //No arguments? Roll a verbose D20
-        print!("No arguments! Accpeting a default. ");
+        print!("No arguments! Accepting a default. ");
         args.push("1d20".to_string());
         num_args=num_args+1; //Otherwise, the loops below would break. This is a hack I'll fix later.
     }
@@ -133,12 +133,14 @@ fn help() {
     println!("");
     println!("will roll a 20-sided die 2 times, and a 6-sided die once.");
     println!("");
-    println!("Other options:");
-    println!("\t--help\t\tThis help information");
-    println!("\t--version\tVersion information");
+    println!("Output Options:");
     println!("\t--silent\tOnly prints results--no headers, roll count, etc.");
     println!("\t--csv\t\tCreates an output to redirect to a CSV file (Excel import)");
     println!("\t--pretty\tASCII art dice");
+    println!("");
+    println!("Other Options:");
+    println!("\t--help\t\tThis help information");
+    println!("\t--version\tVersion information");
 
     println!("");
     process::exit(0);
@@ -200,9 +202,9 @@ fn blankrow(width:i8) {
 fn resultrow(result:i32,width:i8) {
     let resultsize:i8=result.to_string().len().try_into().unwrap();
     let backpadding:i8=(width-resultsize)/2; //how much space to put behind the result
-    let mut frontpadding=backpadding;
-    if (resultsize%2) == 0 {
-        frontpadding=frontpadding+1;
+    let mut frontpadding=backpadding; //how much space in front of the result
+    if (resultsize%2) == 0 { 
+        frontpadding=frontpadding+1; //odd number of digits (1,100, etc.) need a bit extra
     } 
     print!("|");
     printrepeat(' ',frontpadding);
