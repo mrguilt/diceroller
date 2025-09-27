@@ -20,18 +20,79 @@ For instance:
 
 will roll a 20-sided die 2 times.
 
+The output would be:
+
+```
+Rolling 2d20
+	Roll #1: 2
+	Roll #2: 8
+Total for 2d20: 10
+```
+
+*Obviously, the rolls (and total) will be different each run.*
+
 You can roll multiple dice at once. Typing
 
 	`diceroller 2d20 1d6`
 
 will roll a 20-sided die 2 times, and a 6-sided die once.
 
-Other options:
+## Output Options
+
+### Silent
+
+`--silent` option will output the results without any headers, roll count, etc. 
 
 ```
-	--help		This help information
-	--version 	Version information
-	--silent	Only prints results--no headers, roll count, etc.
-	--csv		Creates an output to redirect to a CSV file (Excel import)
-	--pretty	ASCII art dice
+% diceroller 2d20 --silent
+12
+10
 ```
+
+If multiple rolls are selected, there will be a line break between each group:
+
+```
+% diceroller 2d20 2d6 --silent
+12
+12
+
+1
+2
+```
+
+### CSV
+
+`--csv` option creates an output of comma separated values (CSV), to input into other tools (like Microsoft Excel). The first item will be what's being rolled, followed by the results. 
+
+```
+% diceroller 2d20 2d6 --csv
+2d20,13,19
+2d6,6,1
+```
+### Pretty
+
+`--pretty` option generates ASCII art dice. No group headers are provided (I'd recommend doing just one set of rolls).
+
+```
+% diceroller 2d20 --pretty
+ _______
+/       \
+|       |
+|   2   |
+|       |
+\_______/
+ _______
+/       \
+|       |
+|   15  |
+|       |
+\_______/
+```
+
+## Other Options
+
+
+|Option      |Function                |
+|------------|------------------------|
+|`--help`    |Help text               |
+|`--version` |Version information     |
