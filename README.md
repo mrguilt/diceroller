@@ -37,6 +37,18 @@ You can roll multiple dice at once. Typing
 
 will roll a 20-sided die 2 times, and a 6-sided die once.
 
+```
+Rolling 2d20
+	Roll #1: 14
+	Roll #2: 3
+Total for 2d20: 17
+
+Rolling 2d6
+	Roll #1: 3
+	Roll #2: 3
+Total for 2d6: 6
+```
+
 ## Output Options
 
 ### Silent
